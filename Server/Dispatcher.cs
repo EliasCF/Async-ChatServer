@@ -1,7 +1,6 @@
-using System.Text;
 using System.Net.Sockets;
-using System.Net.IPEndPoint;
 using System.Threading;
+using System.Text;
 using System;
 
 namespace ChatServer 
@@ -83,7 +82,7 @@ namespace ChatServer
                 
                 if (content.IndexOf("<EOF>") > -1)
                 {
-                    logger.Log($"Read {content.Length} bytes from socket.\n Data: {content}");
+                    logger.Log($"Read {content.Length} bytes from socket. \nData: {content}");
 
                     //Send to other clients
                 } 
