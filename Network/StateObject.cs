@@ -5,7 +5,16 @@ namespace ChatServer
 {
     public class StateObject
     {
-        public Socket client = null;
+        /// <summary>
+        /// Set client property
+        /// </summary>
+        /// <param name="socket">Socket to be set as the client property</param>
+        public StateObject (Client c = null) 
+        {
+            client = c;
+        }
+
+        public Client client;
 
         public const int bufferSize = 1024;
 

@@ -3,24 +3,30 @@ using System.Net.Sockets;
 using System.Linq;
 using System;
 
-namespace ChatServer.Network
+namespace ChatServer
 {
     public class ClientHandler
     {
-        
+        private Logger logger = new Logger();
 
-        private List<Client> clients { get; set; }
+        private List<Client> clients = new List<Client>();
 
         /// <summary>
         /// Add a newly accepted client
         /// </summary>
-        /// <param name="newClient">The new socket connection</param>
+        /// <param name="socket">The new socket connection</param>
         /// <param name="name">Name of the user</param>
-        public void Add (Socket newClient, string name) 
+        public Guid Add (Socket socket, string name) 
         {
+            logger.Log($"Adding: '{socket.RemoteEndPoint.ToString()}' to client list");
+            
+            //Initialize new Client object
             Guid id = Guid.NewGuid();
+            Client newClient = new Client(id, socket, name);
 
-            clients.Add(new Client(id, newClient, name));
+            clients.Add(newClient);
+
+            return id;
         }
 
         /// <summary>
@@ -30,6 +36,15 @@ namespace ChatServer.Network
         public List<Client> GetAll () 
         {
             return clients;
+        }
+
+        /// <summary>
+        /// Get the last client in the list
+        /// </summary>
+        /// <returns>Newest client</returns>
+        public Client GetLast () 
+        {
+            return clients.ElementAt(clients.Count());
         }
 
         /// <summary>
