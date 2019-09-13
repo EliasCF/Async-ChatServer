@@ -1,6 +1,7 @@
 # Async-ChatServer
 
-##Running in Docker
+## Running in Docker
+##### This section will instruct you in how to get this project up and running in a Docker container
 
 Make app ready for deployment
 ```dotnet publish -c Release```
@@ -9,13 +10,10 @@ Build Docker image
 ```docker build -t chatserver -f Dockerfile .```
 
 Create docker container from Docker image
-```docker create chatserver```
+```docker create --name chat chatserver```
 
 Make sure container has been created  
 ```docker ps -a```
 
-*Optional: Rename container*  
-```docker rename name newname```
-
-Run container  
-```docker start name```
+Run container and attach STDOUT
+```docker start --attach name```
