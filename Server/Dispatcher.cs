@@ -109,24 +109,19 @@ namespace ChatServer
                 {
                     logger.Log($"Read {content.Length} bytes from socket. \nData: '{content.Substring(0, content.Length - 6)}'");
 
-                    if (state.client.name == string.Empty) 
+                    string message = content.Substring(0, content.Length - 6);
+
+                    CommandFactory factory = new CommandFactory();
+                    ICommand command = factory.Build(message);
+                    command.handle(ref clients, state);
+
+                    /*
+                    if (clients.GetId(state.client.id).name == string.Empty) 
                     {
-                        string message = content.Substring(0, content.Length - 6);
-
-                        logger.Log($"message command?: '{message.Substring(0, 6)}'");
-
-                        if (message.Substring(0, 6) == "/Name ") 
-                        {
-                            logger.Log($"New name: '{message.Substring(6)}'");
-
-                            clients.SetName(state.client.id, message.Substring(6));
-                        }
-                        else  
-                        {   
-                            clients.Close(state.client.id);
-                            return;
-                        }
+                        clients.Close(state.client.id);
+                        return;
                     }
+                    */
 
                     //Send to other clients
                 } 
