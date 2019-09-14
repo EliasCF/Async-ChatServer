@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using System.Linq;
 using System.Text;
 using System;
 
@@ -41,10 +43,27 @@ namespace ChatServer
             while (true) 
             {  
                 allDone.Reset();
-
                 network.AcceptClients(new AsyncCallback(AcceptCallback));
-
                 allDone.WaitOne();
+
+                //HandleClients();
+            }
+        }
+
+        public void HandleClients () 
+        {
+            //Get all Clients with a name
+            List<Client> clientsList = clients.GetAll().Where(c => c.name != string.Empty).ToList();
+
+            allDone.Set();
+
+            foreach (Client client in clientsList) 
+            {
+                StateObject state = new StateObject(client);
+
+                state.client.connection
+                    .BeginReceive(state.buffer, 0, StateObject.bufferSize, 0,
+                        new AsyncCallback(ReadCallback), state);
             }
         }
 
@@ -54,8 +73,6 @@ namespace ChatServer
         /// <param name="result">Socket of the accepted client</param>
         public void AcceptCallback (IAsyncResult result) 
         {
-            allDone.Set();
-
             Socket listener = (Socket)result.AsyncState;
             Socket handler = listener.EndAccept(result);
 
@@ -63,6 +80,8 @@ namespace ChatServer
 
             Guid newClientId = clients.Add(handler, string.Empty);
             StateObject state = new StateObject(clients.GetId(newClientId));
+
+            allDone.Set();
 
             state.client.connection
                 .BeginReceive(state.buffer, 0, StateObject.bufferSize, 0,
@@ -89,6 +108,25 @@ namespace ChatServer
                 if (content.IndexOf("<EOF>") > -1)
                 {
                     logger.Log($"Read {content.Length} bytes from socket. \nData: '{content.Substring(0, content.Length - 6)}'");
+
+                    if (state.client.name == string.Empty) 
+                    {
+                        string message = content.Substring(0, content.Length - 6);
+
+                        logger.Log($"message command?: '{message.Substring(0, 6)}'");
+
+                        if (message.Substring(0, 6) == "/Name ") 
+                        {
+                            logger.Log($"New name: '{message.Substring(6)}'");
+
+                            clients.SetName(state.client.id, message.Substring(6));
+                        }
+                        else  
+                        {   
+                            clients.Close(state.client.id);
+                            return;
+                        }
+                    }
 
                     //Send to other clients
                 } 

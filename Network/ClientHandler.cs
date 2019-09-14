@@ -56,5 +56,31 @@ namespace ChatServer
         {
             return clients.Single(c => c.id.Equals(id));
         }
+
+        /// <summary>
+        /// Sets the name of a specific client
+        /// </summary>
+        /// <param name="id">The client's Guid identification</param>
+        /// <param name="name">The name to give the client</param>
+        public void SetName (Guid id, string name) 
+        {
+            int index = clients.FindIndex(c => c.id == id);
+
+            logger.Log($"Setting name of client: '{clients[index].connection.RemoteEndPoint.ToString()}', to: '{name}',");
+            clients[index].name = name;
+        }
+
+        /// <summary>
+        /// Close a specific client
+        /// </summary>
+        /// <param name="id">The client's Guid identification</param>
+        public void Close (Guid id) 
+        {
+            int index = clients.FindIndex(c => c.id == id);
+
+            logger.Log($"Closing client: {clients[index].connection.RemoteEndPoint.ToString()}");
+            clients[index].connection.Close();
+            clients.RemoveAt(index);
+        }
     }
 }
