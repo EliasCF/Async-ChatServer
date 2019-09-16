@@ -2,7 +2,14 @@ namespace ChatServer
 {
     public class NameCommand : ICommand
     {
-        private string _message { get; }
+        public string _message { get; }
+
+        public string command { get; } = "/Name";
+
+        public NameCommand () 
+        { 
+
+        }
 
         public NameCommand (string message) 
         {

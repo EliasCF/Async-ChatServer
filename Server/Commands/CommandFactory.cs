@@ -1,27 +1,46 @@
+using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
+using System;
+
 namespace ChatServer
 {
     public class CommandFactory
     {
         public ICommand Build (string command) 
         {
-            ICommand builtCommand = null;
-
+            List<Type> commands = GetImplementations();
+            
             string c = command.Split(' ')[0];
 
-            switch (c)
+            foreach (Type co in commands) 
             {
-                case "/Name":
-                    builtCommand = new NameCommand(command);
-                    break;
-                case "/Count":
-                    builtCommand = new CountCommand();
-                    break;
-                default: 
-                    builtCommand = new NoCommand();
-                    break;
+                var property = co.GetProperty("command");
+                Object o = co.GetProperty("_message") == null ? 
+                    Activator.CreateInstance(co) : 
+                    Activator.CreateInstance(co, new object[] { command }); 
+
+                var value = property.GetValue(o, null);
+                
+                if ((string)value == c) 
+                {
+                    return (ICommand)o;
+                }
             }
 
-            return builtCommand;
+            return new NoCommand();
+        }
+
+        private List<Type> GetImplementations () 
+        {
+            Type type = typeof(ICommand);
+            List<Type> types = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => type.IsAssignableFrom(p) && !p.IsInterface)
+                .ToList();
+
+            return types;
         }
     }
 }
