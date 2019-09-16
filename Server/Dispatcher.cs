@@ -45,25 +45,6 @@ namespace ChatServer
                 allDone.Reset();
                 network.AcceptClients(new AsyncCallback(AcceptCallback));
                 allDone.WaitOne();
-
-                //HandleClients();
-            }
-        }
-
-        public void HandleClients () 
-        {
-            //Get all Clients with a name
-            List<Client> clientsList = clients.GetAll().Where(c => c.name != string.Empty).ToList();
-
-            allDone.Set();
-
-            foreach (Client client in clientsList) 
-            {
-                StateObject state = new StateObject(client);
-
-                state.client.connection
-                    .BeginReceive(state.buffer, 0, StateObject.bufferSize, 0,
-                        new AsyncCallback(ReadCallback), state);
             }
         }
 
@@ -115,22 +96,20 @@ namespace ChatServer
                     ICommand command = factory.Build(message);
                     command.handle(ref clients, state);
 
-                    /*
                     if (clients.GetId(state.client.id).name == string.Empty) 
                     {
                         clients.Close(state.client.id);
                         return;
                     }
-                    */
+
+                    state.sb.Clear();
 
                     //Send to other clients
-                } 
-                else 
-                {
-                    state.client.connection
-                        .BeginReceive(state.buffer, 0, StateObject.bufferSize, 0,  
-                            new AsyncCallback(ReadCallback), state);
                 }
+
+                state.client.connection
+                    .BeginReceive(state.buffer, 0, StateObject.bufferSize, 0,  
+                        new AsyncCallback(ReadCallback), state);
             }
         }
     }

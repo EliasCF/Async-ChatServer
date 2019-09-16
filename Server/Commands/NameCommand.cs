@@ -11,9 +11,7 @@ namespace ChatServer
 
         public void handle(ref ClientHandler clients, StateObject state) 
         {
-            string commandMessage = _message.Substring(0, _message.Length - 6);
-
-            clients.SetName(state.client.id, commandMessage.Substring(6));
+            clients.SetName(state.client.id, _message.Substring(6));
         }
     }
 }
