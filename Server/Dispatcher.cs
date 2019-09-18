@@ -48,6 +48,31 @@ namespace ChatServer
             }
         }
 
+        public void Send (Client client, string data) 
+        {
+            byte[] byteData = Encoding.ASCII.GetBytes(data);
+
+            logger.Log($"Sending message: '{data}' to '{client.name}'");
+            
+            client.connection.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallback), client);
+        }
+
+        public void SendCallback (IAsyncResult result) 
+        {
+            try 
+            {
+                Client client = (Client)result.AsyncState;
+
+                int byteSent = client.connection.EndSend(result);
+                logger.Log($"Sent ");
+            }
+            catch (Exception e) 
+            {
+                logger.Log(e.ToString());
+            }
+        }
+
         /// <summary>
         /// Accept client and receive their first message
         /// </summary>
@@ -101,6 +126,8 @@ namespace ChatServer
                         clients.Close(state.client.id);
                         return;
                     }
+
+                    Send(state.client, "Message received!");
 
                     state.sb.Clear();
 
