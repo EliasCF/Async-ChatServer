@@ -99,6 +99,8 @@ namespace ChatServer
             Guid newClientId = clients.Add(handler, string.Empty);
             StateObject state = new StateObject(clients.GetId(newClientId));
 
+            Send(state.client, "Welcome, you need to set your name by typing the name command: '/Name <name>' \r\nExample: '/Name Lars'\r\n");
+
             allDone.Set();
 
             state.client.connection
