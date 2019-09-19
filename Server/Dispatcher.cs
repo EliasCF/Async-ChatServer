@@ -58,6 +58,18 @@ namespace ChatServer
                 new AsyncCallback(SendCallback), client);
         }
 
+        public void SendToAll (Client from, string message, bool excludeSender) 
+        {
+            List<Client> SendTo = clients.GetAll();
+
+            if (excludeSender) SendTo.Where(c => c.id != from.id);
+
+            foreach (Client client in SendTo) 
+            {
+                Send(client, $"{from.name}: {message}\r\n");
+            }
+        }
+
         public void SendCallback (IAsyncResult result) 
         {
             try 
@@ -127,7 +139,7 @@ namespace ChatServer
                         return;
                     }
 
-                    Send(state.client, "Message received!");
+                    SendToAll(state.client, message, true);
 
                     state.sb.Clear();
 
