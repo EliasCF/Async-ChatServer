@@ -86,5 +86,10 @@ namespace ChatServer
             clients[index].connection.Close();
             clients.RemoveAt(index);
         }
+
+        public bool Exists (Guid id) 
+        {
+            return clients.SingleOrDefault(c => c.id.Equals(id)) == null ? false : true;
+        }
     }
 }

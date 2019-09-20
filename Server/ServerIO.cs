@@ -106,6 +106,9 @@ namespace ChatServer
                     ICommand command = factory.Build(message);
                     command.handle(ref clients, state);
 
+                    //Exit method if the last command was a DiconnectCommand
+                    if (!clients.Exists(state.client.id)) return;
+
                     //Disconnect client if their first message wasn't a name command
                     if (clients.GetId(state.client.id).state == ClientState.NeedName) 
                     {
