@@ -17,5 +17,7 @@ namespace ChatServer
         public Socket connection;
         
         public string name;
+
+        public ClientState state;
     }
 }
