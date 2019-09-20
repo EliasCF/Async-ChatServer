@@ -101,21 +101,21 @@ namespace ChatServer
 
                     string message = content.Substring(0, content.Length - 6);
 
+                    //If the message was a command then run it
                     CommandFactory factory = new CommandFactory();
                     ICommand command = factory.Build(message);
                     command.handle(ref clients, state);
 
-                    if (clients.GetId(state.client.id).name == string.Empty) 
+                    //Disconnect client if their first message wasn't a name command
+                    if (clients.GetId(state.client.id).state == ClientState.NeedName) 
                     {
                         clients.Close(state.client.id);
                         return;
                     }
 
-                    SendToAll(state.client, message, true);
+                    SendToAll(state.client, message, true); //Send message to all clients but the sender
 
-                    state.sb.Clear();
-
-                    //Send to other clients
+                    state.sb.Clear(); //Clear StringBuilder of messages
                 }
 
                 state.client.connection

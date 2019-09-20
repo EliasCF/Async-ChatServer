@@ -22,7 +22,7 @@ namespace ChatServer
             
             //Initialize new Client object
             Guid id = Guid.NewGuid();
-            Client newClient = new Client(id, socket, name);
+            Client newClient = new Client(id, socket, name, ClientState.NeedName);
 
             clients.Add(newClient);
 
@@ -36,15 +36,6 @@ namespace ChatServer
         public List<Client> GetAll () 
         {
             return clients;
-        }
-
-        /// <summary>
-        /// Get the last client in the list
-        /// </summary>
-        /// <returns>Newest client</returns>
-        public Client GetLast () 
-        {
-            return clients.ElementAt(clients.Count());
         }
 
         /// <summary>
@@ -68,6 +59,19 @@ namespace ChatServer
 
             logger.Log($"Setting name of client: '{clients[index].connection.RemoteEndPoint.ToString()}', to: '{name}',");
             clients[index].name = name;
+        }
+
+        /// <summary>
+        /// Change the state of a client
+        /// </summary>
+        /// <param name="id">the client's Guid identification</param>
+        /// <param name="newState">The state to change the current state to</param>
+        public void SetState (Guid id, ClientState newState)
+        {
+            int index = clients.FindIndex(c => c.id == id);
+
+            logger.Log("");
+            clients[index].state = newState; 
         }
 
         /// <summary>
