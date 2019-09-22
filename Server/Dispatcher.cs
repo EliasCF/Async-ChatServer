@@ -38,7 +38,8 @@ namespace ChatServer
         {
             network.ListenForConnections();
 
-            ServerIO io = new ServerIO(ref allDone);
+            ServerIO io = new ServerIO();
+            io.ResetEventIsSet += SetManualResetEvent;
 
             while (true) 
             {  
@@ -46,6 +47,11 @@ namespace ChatServer
                 network.AcceptClients(new AsyncCallback(io.AcceptCallback));
                 allDone.WaitOne();
             }
+        }
+
+        private void SetManualResetEvent (object sender, EventArgs e) 
+        {
+            allDone.Set();
         }
     }
 }

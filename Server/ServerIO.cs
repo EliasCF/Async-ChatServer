@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Threading;
 using System.Linq;
 using System.Text;
 using System;
@@ -9,13 +8,17 @@ namespace ChatServer
 {
     public class ServerIO
     {
-        private ClientHandler clients = new ClientHandler(); //Connected clients
-        ManualResetEvent allDone { get; set; }
         private Logger logger = new Logger();
 
-        public ServerIO (ref ManualResetEvent resetEvent) 
+        private ClientHandler clients = new ClientHandler();
+
+        public event EventHandler ResetEventIsSet;
+
+        protected virtual void OnManualResetEventSet (EventArgs e)
         {
-            allDone = resetEvent;
+            var handler = ResetEventIsSet;
+            if (handler != null)
+                handler(this, e);
         }
 
         public void Send (Client client, string data) 
@@ -71,7 +74,7 @@ namespace ChatServer
 
             Send(state.client, "Welcome, you need to set your name by typing the name command: '/Name <name>' \r\nExample: '/Name Lars'\r\n");
 
-            allDone.Set();
+            OnManualResetEventSet(new EventArgs());
 
             state.client.connection
                 .BeginReceive(state.buffer, 0, StateObject.bufferSize, 0,
