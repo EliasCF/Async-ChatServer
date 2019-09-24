@@ -1,4 +1,7 @@
-﻿namespace ChatServer
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+
+namespace ChatServer
 {
     class Program
     {
@@ -6,7 +9,12 @@
         {
             int port = 7777; //Port to open server on
 
-            Dispatcher dispatcher = new Dispatcher(port);
+            ServiceProvider serviceProvider = new ServiceCollection()
+                .AddSingleton<ClientHandler>()
+                .AddSingleton<RoomHandler>()
+                .BuildServiceProvider();
+
+            Dispatcher dispatcher = new Dispatcher(serviceProvider, port);
             dispatcher.Dispatch();
         }
     }

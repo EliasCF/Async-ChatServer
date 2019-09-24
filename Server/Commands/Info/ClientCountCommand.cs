@@ -6,7 +6,7 @@ namespace ChatServer
 
         public ClientCountCommand () { }
 
-        public void handle (ref ClientHandler clients, ref RoomHandler chatRooms, StateObject state) 
+        public void handle (StateObject state) 
         {
             //Send message to clients, detailing the amount of active players
         }

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace ChatServer 
@@ -8,14 +9,20 @@ namespace ChatServer
 
         public string command { get; } = "/RoomJoin";
 
+        public ClientHandler clients { get; }
+        
+        public RoomHandler chatRooms { get; }
+
         public JoinRoomCommand () { }
 
-        public JoinRoomCommand (string message)
+        public JoinRoomCommand (ServiceProvider services, string message)
         {
+            clients = services.GetService<ClientHandler>();
+            chatRooms = services.GetService<RoomHandler>();
             _message = message;
         }
 
-        public void handle(ref ClientHandler clients, ref RoomHandler chatRooms, StateObject state) 
+        public void handle(StateObject state) 
         {
             if (clients.Exists(state.client.id)) 
             {

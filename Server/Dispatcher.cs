@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System.Net.Sockets;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
-using System.Linq;
-using System.Text;
 using System;
 
 namespace ChatServer 
@@ -12,13 +9,15 @@ namespace ChatServer
         private TcpNetworkManager network { get; }
         private Logger logger = new Logger();
         private ManualResetEvent allDone = new ManualResetEvent(false);
+        public ServiceProvider services { get; set; }
 
         /// <summary>
         /// Initialize new network connection
         /// </summary>
         /// <param name="port"></param>
-        public Dispatcher (int port)
+        public Dispatcher (ServiceProvider service, int port)
         {
+            services = services;
             network = new TcpNetworkManager(port);
         }
 
@@ -38,7 +37,7 @@ namespace ChatServer
         {
             network.ListenForConnections();
 
-            ServerIO io = new ServerIO();
+            ServerIO io = new ServerIO(services);
             io.ResetEventIsSet += SetManualResetEvent;
 
             while (true) 

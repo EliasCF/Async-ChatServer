@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Linq;
@@ -10,11 +11,17 @@ namespace ChatServer
     {
         private Logger logger = new Logger();
 
-        private ClientHandler clients = new ClientHandler();
+        public ServiceProvider services { get; set; }
 
-        private RoomHandler chatRooms = new RoomHandler();
+        private ClientHandler clients { get; set; }
 
         public event EventHandler ResetEventIsSet;
+
+        public ServerIO (ServiceProvider service) 
+        {
+            services = service;
+            clients = service.GetService<ClientHandler>();
+        }
 
         protected virtual void OnManualResetEventSet (EventArgs e)
         {
@@ -107,8 +114,8 @@ namespace ChatServer
 
                     //If the message was a command then run it
                     CommandFactory factory = new CommandFactory();
-                    ICommand command = factory.Build(message);
-                    command.handle(ref clients, ref chatRooms, state);
+                    ICommand command = factory.Build(services, message);
+                    command.handle(state);
 
                     //Exit method if the last command was a DiconnectCommand
                     if (!clients.Exists(state.client.id)) return;

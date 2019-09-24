@@ -1,4 +1,4 @@
-using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -7,7 +7,7 @@ namespace ChatServer
 {
     public class CommandFactory
     {
-        public ICommand Build (string command) 
+        public ICommand Build (ServiceProvider services, string command) 
         {
             List<Type> commands = GetImplementations();
             
@@ -17,8 +17,8 @@ namespace ChatServer
             {
                 var property = co.GetProperty("command");
                 Object o = co.GetProperty("_message") == null ? 
-                    Activator.CreateInstance(co) : 
-                    Activator.CreateInstance(co, new object[] { command }); 
+                    Activator.CreateInstance(co, new object[] { services }) : 
+                    Activator.CreateInstance(co, new object[] { services, command }); 
 
                 var value = property.GetValue(o, null);
                 
