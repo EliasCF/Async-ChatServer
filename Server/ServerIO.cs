@@ -16,9 +16,8 @@ namespace ChatServer
 
         protected virtual void OnManualResetEventSet (EventArgs e)
         {
-            var handler = ResetEventIsSet;
-            if (handler != null)
-                handler(this, e);
+            EventHandler handler = ResetEventIsSet;
+            handler?.Invoke(this, e);
         }
 
         public void Send (Client client, string data) 
