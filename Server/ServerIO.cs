@@ -12,6 +12,8 @@ namespace ChatServer
 
         private ClientHandler clients = new ClientHandler();
 
+        private RoomHandler chatRooms = new RoomHandler();
+
         public event EventHandler ResetEventIsSet;
 
         protected virtual void OnManualResetEventSet (EventArgs e)
@@ -34,7 +36,7 @@ namespace ChatServer
         {
             List<Client> SendTo = clients.GetAll();
 
-            if (excludeSender) SendTo = SendTo.Where(c => c.id != from.id).ToList();
+            if (excludeSender) SendTo = SendTo.Where(c => c.id != from.id && c.roomId == from.roomId).ToList();
 
             foreach (Client client in SendTo) 
             {
@@ -106,7 +108,7 @@ namespace ChatServer
                     //If the message was a command then run it
                     CommandFactory factory = new CommandFactory();
                     ICommand command = factory.Build(message);
-                    command.handle(ref clients, state);
+                    command.handle(ref clients, ref chatRooms, state);
 
                     //Exit method if the last command was a DiconnectCommand
                     if (!clients.Exists(state.client.id)) return;

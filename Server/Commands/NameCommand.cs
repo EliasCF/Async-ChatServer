@@ -16,7 +16,7 @@ namespace ChatServer
             _message = message;
         }
 
-        public void handle(ref ClientHandler clients, StateObject state) 
+        public void handle(ref ClientHandler clients, ref RoomHandler chatRooms, StateObject state) 
         {
             clients.SetName(state.client.id, _message.Substring(6));
             clients.SetState(state.client.id, ClientState.Passive);

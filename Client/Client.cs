@@ -11,14 +11,17 @@ namespace ChatServer
             connection = newConn;
             name = newName;
             state = newState;
+            roomId = Guid.Empty;
         }
 
-        public Guid id;
+        public Guid id { get; set; }
 
-        public Socket connection;
+        public Socket connection { get; set; }
         
-        public string name;
+        public string name { get; set; }
 
-        public ClientState state;
+        public ClientState state { get; set; }
+
+        public Guid roomId { get; set; }
     }
 }

@@ -70,8 +70,26 @@ namespace ChatServer
         {
             int index = clients.FindIndex(c => c.id == id);
 
-            logger.Log("");
-            clients[index].state = newState; 
+            if (index != -1) 
+            {
+                clients[index].state = newState; 
+            }
+        }
+
+        /// <summary>
+        /// Change the room that a client is connected to
+        /// </summary>
+        /// <param name="id">The client's Guid identification</param>
+        /// <param name="room">The room's Guid identification</param>
+        public void SetRoom (Guid id, Guid room) 
+        {
+            int index = clients.FindIndex(c => c.id == id);
+
+            if (index != -1) 
+            {
+                clients[index].roomId = room;
+            }
+
         }
 
         /// <summary>
@@ -87,6 +105,11 @@ namespace ChatServer
             clients.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Check if a specific Client exists
+        /// </summary>
+        /// <param name="id">The client's Guid identification</param>
+        /// <returns>Does the client exist</returns>
         public bool Exists (Guid id) 
         {
             return clients.SingleOrDefault(c => c.id.Equals(id)) == null ? false : true;
