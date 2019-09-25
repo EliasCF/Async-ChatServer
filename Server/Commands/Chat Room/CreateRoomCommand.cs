@@ -23,8 +23,10 @@ namespace ChatServer
 
         public void handle(StateObject state) 
         {
-            chatRooms.Add(_message, state.client.id);
-            clients.SetRoom(state.client.id, chatRooms.FindByName(_message));
+            string roomName = _message.Substring(command.Length + 1);
+
+            chatRooms.Add(roomName, state.client.id);
+            clients.SetRoom(state.client.id, chatRooms.FindByName(roomName));
         }
     }
 }

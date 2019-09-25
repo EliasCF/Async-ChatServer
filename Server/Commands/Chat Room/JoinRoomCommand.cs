@@ -19,6 +19,7 @@ namespace ChatServer
         {
             clients = services.GetService<ClientHandler>();
             chatRooms = services.GetService<RoomHandler>();
+
             _message = message;
         }
 
@@ -26,7 +27,9 @@ namespace ChatServer
         {
             if (clients.Exists(state.client.id)) 
             {
-                Guid roomId = chatRooms.FindByName(_message);
+                string roomName = _message.Substring(command.Length + 1);
+
+                Guid roomId = chatRooms.FindByName(roomName);
                 clients.SetRoom(state.client.id, roomId);
             }
         }

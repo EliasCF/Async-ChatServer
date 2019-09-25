@@ -5,8 +5,6 @@ namespace ChatServer
 {
     class Program
     {
-        //public static IServiceCollection serviceProvider = null;
-
         static void Main(string[] args)
         {
             int port = 7777; //Port to open server on

@@ -20,7 +20,9 @@ namespace ChatServer
 
         public void handle(StateObject state) 
         {
-            clients.SetName(state.client.id, _message.Substring(6));
+            string clientName = _message.Substring(command.Length + 1);
+
+            clients.SetName(state.client.id, clientName);
             clients.SetState(state.client.id, ClientState.Passive);
         }
     }
