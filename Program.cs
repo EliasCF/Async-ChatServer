@@ -5,14 +5,15 @@ namespace ChatServer
 {
     class Program
     {
+        //public static IServiceCollection serviceProvider = null;
+
         static void Main(string[] args)
         {
             int port = 7777; //Port to open server on
 
-            ServiceProvider serviceProvider = new ServiceCollection()
+            IServiceCollection serviceProvider = new ServiceCollection()
                 .AddSingleton<ClientHandler>()
-                .AddSingleton<RoomHandler>()
-                .BuildServiceProvider();
+                .AddSingleton<RoomHandler>();
 
             Dispatcher dispatcher = new Dispatcher(serviceProvider, port);
             dispatcher.Dispatch();

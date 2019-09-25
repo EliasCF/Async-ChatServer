@@ -15,9 +15,9 @@ namespace ChatServer
         /// Initialize new network connection
         /// </summary>
         /// <param name="port"></param>
-        public Dispatcher (ServiceProvider service, int port)
+        public Dispatcher (IServiceCollection service, int port)
         {
-            services = services;
+            services = service.BuildServiceProvider();
             network = new TcpNetworkManager(port);
         }
 

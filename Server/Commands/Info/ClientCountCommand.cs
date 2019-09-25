@@ -1,10 +1,12 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace ChatServer
 {
     public class ClientCountCommand : ICommand
     {
         public string command { get; } = "/ClientCount";
 
-        public ClientCountCommand () { }
+        public ClientCountCommand (ServiceProvider service) { }
 
         public void handle (StateObject state) 
         {

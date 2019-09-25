@@ -28,7 +28,7 @@ namespace ChatServer
                 }
             }
 
-            return new NoCommand();
+            return new NoCommand(services);
         }
 
         private List<Type> GetImplementations () 
