@@ -3,9 +3,9 @@ using System;
 
 namespace ChatServer 
 {
-    public class JoinRoomCommand : ICommand
+    public class JoinRoomCommand : ICommand, IParameterCommand
     {
-        public string _message { get; }
+        public string parameter { get; }
 
         public string command { get; } = "/RoomJoin";
 
@@ -15,19 +15,19 @@ namespace ChatServer
 
         public JoinRoomCommand () { }
 
-        public JoinRoomCommand (ServiceProvider services, string message)
+        public JoinRoomCommand (ServiceProvider services, string param)
         {
             clients = services.GetService<ClientHandler>();
             chatRooms = services.GetService<RoomHandler>();
 
-            _message = message;
+            parameter = param;
         }
 
         public void handle(StateObject state) 
         {
             if (clients.Exists(state.client.id)) 
             {
-                string roomName = _message.Substring(command.Length + 1);
+                string roomName = parameter.Substring(command.Length + 1);
 
                 Guid roomId = chatRooms.FindByName(roomName);
                 clients.SetRoom(state.client.id, roomId);

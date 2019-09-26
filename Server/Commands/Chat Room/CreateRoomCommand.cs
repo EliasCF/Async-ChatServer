@@ -2,9 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatServer
 {
-    public class CreateRoomCommand : ICommand
+    public class CreateRoomCommand : ICommand, IParameterCommand
     {
-        public string _message { get; }
+        public string parameter { get; }
 
         public string command { get; } = "/RoomCreate";
 
@@ -14,16 +14,16 @@ namespace ChatServer
 
         public CreateRoomCommand () { }
 
-        public CreateRoomCommand (ServiceProvider services, string message)
+        public CreateRoomCommand (ServiceProvider services, string param)
         {
             clients = services.GetService<ClientHandler>();
             chatRooms = services.GetService<RoomHandler>();
-            _message = message;
+            parameter = param;
         }
 
         public void handle(StateObject state) 
         {
-            string roomName = _message.Substring(command.Length + 1);
+            string roomName = parameter.Substring(command.Length + 1);
 
             chatRooms.Add(roomName, state.client.id);
             clients.SetRoom(state.client.id, chatRooms.FindByName(roomName));
