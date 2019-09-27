@@ -17,53 +17,19 @@ namespace ChatServer
 
         public event EventHandler ResetEventIsSet;
 
+        private MessageSender sender { get; }
+
         public ServerIO (ServiceProvider service) 
         {
             services = service;
             clients = service.GetService<ClientHandler>();
+            sender = service.GetService<MessageSender>();
         }
 
         protected virtual void OnManualResetEventSet (EventArgs e)
         {
             EventHandler handler = ResetEventIsSet;
             handler?.Invoke(this, e);
-        }
-
-        public void Send (Client client, string data) 
-        {
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
-
-            logger.Log($"Sending message: '{data}' to '{client.name}'");
-            
-            client.connection.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), client);
-        }
-
-        public void SendToAll (Client from, string message, bool excludeSender) 
-        {
-            List<Client> SendTo = clients.GetAll();
-
-            if (excludeSender) SendTo = SendTo.Where(c => c.id != from.id && c.roomId == from.roomId).ToList();
-
-            foreach (Client client in SendTo) 
-            {
-                Send(client, $"{from.name}: {message}\r\n");
-            }
-        }
-
-        public void SendCallback (IAsyncResult result) 
-        {
-            try 
-            {
-                Client client = (Client)result.AsyncState;
-
-                int byteSent = client.connection.EndSend(result);
-                logger.Log($"Sent ");
-            }
-            catch (Exception e) 
-            {
-                logger.Log(e.ToString());
-            }
         }
 
         /// <summary>
@@ -80,7 +46,7 @@ namespace ChatServer
             Guid newClientId = clients.Add(handler, string.Empty);
             StateObject state = new StateObject(clients.GetId(newClientId));
 
-            Send(state.client, "Welcome, you need to set your name by typing the name command: '/Name <name>' \r\nExample: '/Name Lars'\r\n");
+            sender.Send(state.client, "Welcome, you need to set your name by typing the name command: '/Name <name>' \r\nExample: '/Name Lars'\r\n");
 
             OnManualResetEventSet(new EventArgs());
 
@@ -127,7 +93,7 @@ namespace ChatServer
                         return;
                     }
 
-                    SendToAll(state.client, message, true); //Send message to all clients but the sender
+                    sender.SendToAll(state.client, message, true); //Send message to all clients but the sender
 
                     state.sb.Clear(); //Clear StringBuilder of messages
                 }

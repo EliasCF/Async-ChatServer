@@ -11,7 +11,9 @@ namespace ChatServer
 
             IServiceCollection serviceProvider = new ServiceCollection()
                 .AddSingleton<ClientHandler>()
-                .AddSingleton<RoomHandler>();
+                .AddSingleton<RoomHandler>()
+                .AddScoped<Logger>()
+                .AddScoped<MessageSender>(services => new MessageSender(services));
 
             Dispatcher dispatcher = new Dispatcher(serviceProvider, port);
             dispatcher.Dispatch();
