@@ -16,7 +16,7 @@ namespace ChatServer
             foreach (Type co in commands) 
             {
                 var property = co.GetProperty("command");
-                Object o = co.GetProperty("_message") == null ? 
+                Object o = co.GetProperty("parameter") == null ? 
                     Activator.CreateInstance(co, new object[] { services }) : 
                     Activator.CreateInstance(co, new object[] { services, command }); 
 
