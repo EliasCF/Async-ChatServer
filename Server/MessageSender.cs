@@ -36,11 +36,21 @@ namespace ChatServer
         {
             List<Client> SendTo = clients.GetAll();
 
-            if (excludeSender) SendTo = SendTo.Where(c => c.id != from.id && c.roomId == from.roomId).ToList();
+            string text = $"{message}\r\n";
+
+            if (from != null) 
+            {
+                if (excludeSender) 
+                {
+                    SendTo = SendTo.Where(c => c.id != from.id && c.roomId == from.roomId).ToList();
+                }
+                
+                text = $"{from.name}: " + text;
+            }
 
             foreach (Client client in SendTo) 
             {
-                Send(client, $"{from.name}: {message}\r\n");
+                Send(client, text);
             }
         }
 
