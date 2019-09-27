@@ -11,6 +11,14 @@ namespace ChatServer
 
         private List<Client> clients = new List<Client>();
 
+        public int Count 
+        { 
+            get 
+            { 
+                return clients.Count; 
+            } 
+        }
+
         /// <summary>
         /// Add a newly accepted client
         /// </summary>

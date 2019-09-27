@@ -2,6 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatServer
 {
+    /// <summary>
+    /// A command that does nothing
+    /// </summary>
     public class NoCommand : ICommand
     {
         public string command { get; } = "";

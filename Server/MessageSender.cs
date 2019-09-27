@@ -32,6 +32,12 @@ namespace ChatServer
                 new AsyncCallback(SendCallback), client);
         }
 
+        /// <summary>
+        /// Send a text message to all connected clients
+        /// </summary>
+        /// <param name="from">The client who sent the message</param>
+        /// <param name="message">Message to be sent</param>
+        /// <param name="excludeSender">Whether or not the message should be sent back to the sender</param>
         public void SendToAll (Client from, string message, bool excludeSender) 
         {
             List<Client> SendTo = clients.GetAll();
@@ -54,6 +60,10 @@ namespace ChatServer
             }
         }
 
+        /// <summary>
+        /// Async callback for send method
+        /// </summary>
+        /// <param name="result">Client object of the receiving client</param>
         public void SendCallback (IAsyncResult result) 
         {
             try 
@@ -61,7 +71,6 @@ namespace ChatServer
                 Client client = (Client)result.AsyncState;
 
                 int byteSent = client.connection.EndSend(result);
-                logger.Log($"Sent ");
             }
             catch (Exception e) 
             {

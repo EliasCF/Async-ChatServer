@@ -47,7 +47,6 @@ namespace ChatServer
                 allDone.WaitOne();
             }
         }
-
         private void SetManualResetEvent (object sender, EventArgs e) 
         {
             allDone.Set();

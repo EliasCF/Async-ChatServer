@@ -8,11 +8,9 @@ namespace ChatServer
 
         public string command { get; } = "/RoomCreate";
 
-        public ClientHandler clients { get; }
+        private ClientHandler clients { get; }
 
-        public RoomHandler chatRooms { get; }
-
-        public CreateRoomCommand () { }
+        private RoomHandler chatRooms { get; }
 
         public CreateRoomCommand (ServiceProvider services, string param)
         {

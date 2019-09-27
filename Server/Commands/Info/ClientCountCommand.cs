@@ -6,11 +6,21 @@ namespace ChatServer
     {
         public string command { get; } = "/ClientCount";
 
-        public ClientCountCommand (ServiceProvider service) { }
+        private MessageSender sender  { get; }
+
+        private ClientHandler clients { get; }
+
+        public ClientCountCommand (ServiceProvider service) 
+        {
+            sender = service.GetService<MessageSender>();
+            clients = service.GetService<ClientHandler>();
+        }
 
         public void handle (StateObject state) 
         {
-            //Send message to clients, detailing the amount of active players
+            string message =  $"Current amount of server clients: {clients.Count}";
+
+            sender.SendToAll(null, message, true);
         }
     }
 }

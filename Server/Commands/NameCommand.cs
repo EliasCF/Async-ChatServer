@@ -8,9 +8,7 @@ namespace ChatServer
 
         public string command { get; } = "/Name";
 
-        public ClientHandler clients { get; }
-
-        public NameCommand () { }
+        private ClientHandler clients { get; }
 
         public NameCommand (ServiceProvider serivces, string param) 
         {

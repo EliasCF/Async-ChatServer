@@ -10,6 +10,11 @@ namespace ChatServer
 
         private Logger logger = new Logger();
         
+        /// <summary>
+        /// Add a room to the list of rooms
+        /// </summary>
+        /// <param name="name">Name of the new room</param>
+        /// <param name="creator">Id of the client who has created the room</param>
         public void Add (string name, Guid creator)
         { 
             if (!chatRooms.Any(cr => cr.name == name)) 
@@ -26,6 +31,10 @@ namespace ChatServer
             }
         }
 
+        /// <summary>
+        /// Remove a room from the list of rooms
+        /// </summary>
+        /// <param name="id">Guid of room</param>
         public void Remove (Guid id) 
         {
             Room roomToRemove = chatRooms.SingleOrDefault(r => r.id == id);
@@ -36,6 +45,11 @@ namespace ChatServer
             }
         }
 
+        /// <summary>
+        /// Get a rooms id by its name
+        /// </summary>
+        /// <param name="name">Name of room</param>
+        /// <returns>Room id</returns>
         public Guid FindByName (string name)
         {
             if (name == null) return Guid.Empty;

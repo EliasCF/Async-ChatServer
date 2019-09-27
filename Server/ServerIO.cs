@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Linq;
 using System.Text;
 using System;
 
@@ -9,7 +7,7 @@ namespace ChatServer
 {
     public class ServerIO
     {
-        private Logger logger = new Logger();
+        private Logger logger { get; }
 
         public ServiceProvider services { get; set; }
 
@@ -24,6 +22,7 @@ namespace ChatServer
             services = service;
             clients = service.GetService<ClientHandler>();
             sender = service.GetService<MessageSender>();
+            logger = service.GetService<Logger>();
         }
 
         protected virtual void OnManualResetEventSet (EventArgs e)
