@@ -6,7 +6,7 @@ namespace ChatServer
 {
     public class TcpNetworkManager 
     {
-        private Logger logger = new Logger();
+        private ILogger logger = new ConsoleLogger();
 
         private TcpListener listener { get; }
 

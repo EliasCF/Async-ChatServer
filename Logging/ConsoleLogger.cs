@@ -2,7 +2,7 @@ using System;
 
 namespace ChatServer
 {
-    public class Logger 
+    public class ConsoleLogger : ILogger
     {
         /// <summary>
         /// Logs a message to the console

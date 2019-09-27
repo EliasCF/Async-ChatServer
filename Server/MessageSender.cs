@@ -8,12 +8,12 @@ namespace ChatServer
 {
     public class MessageSender
     {
-        private Logger logger { get; }
+        private ILogger logger { get; }
         public ClientHandler clients { get; }
 
         public MessageSender (IServiceProvider services)
         {
-            logger = services.GetService<Logger>();
+            logger = services.GetService<ILogger>();
             clients = services.GetService<ClientHandler>();
         }
 

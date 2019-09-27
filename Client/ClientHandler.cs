@@ -7,10 +7,20 @@ namespace ChatServer
 {
     public class ClientHandler
     {
-        private Logger logger = new Logger();
+        private ILogger logger { get; }
 
-        private List<Client> clients = new List<Client>();
+        private List<Client> clients { get; set; }
 
+        public ClientHandler (ILogger log) 
+        {
+            clients = new List<Client>();
+            logger = log;
+        }
+
+        /// <summary>
+        /// Current amount of connected clients
+        /// </summary>
+        /// <value></value>
         public int Count 
         { 
             get 

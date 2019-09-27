@@ -6,9 +6,15 @@ namespace ChatServer
 {
     public class RoomHandler
     {
-        private List<Room> chatRooms = new List<Room>();
+        private List<Room> chatRooms { get; set; }
 
-        private Logger logger = new Logger();
+        private ILogger logger { get; }
+
+        public RoomHandler (ILogger log) 
+        {
+            chatRooms = new List<Room>();
+            logger = log;
+        }
         
         /// <summary>
         /// Add a room to the list of rooms

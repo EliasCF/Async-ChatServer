@@ -7,7 +7,7 @@ namespace ChatServer
     public class Dispatcher 
     {
         private TcpNetworkManager network { get; }
-        private Logger logger = new Logger();
+        private ILogger logger { get; }
         private ManualResetEvent allDone = new ManualResetEvent(false);
         public ServiceProvider services { get; set; }
 
@@ -18,22 +18,24 @@ namespace ChatServer
         public Dispatcher (IServiceCollection service, int port)
         {
             services = service.BuildServiceProvider();
+
+            logger = services.GetService<ILogger>();
             network = new TcpNetworkManager(port);
         }
 
         /// <summary>
-        /// Starts server and begis the event-loop
+        /// Starts server and begis the acceptor loop
         /// </summary>
         public void Dispatch () 
         {
-            logger.Log("Starting EventLoop");
-            EventLoop();
+            logger.Log("Starting AcceptorLoop");
+            AcceptorLoop();
         }
 
         /// <summary>
-        /// Handle event loop
+        /// Accept clients
         /// </summary>
-        private void EventLoop () 
+        private void AcceptorLoop () 
         {
             network.ListenForConnections();
 

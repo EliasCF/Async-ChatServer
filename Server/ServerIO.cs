@@ -7,7 +7,7 @@ namespace ChatServer
 {
     public class ServerIO
     {
-        private Logger logger { get; }
+        private ILogger logger { get; }
 
         public ServiceProvider services { get; set; }
 
@@ -22,7 +22,7 @@ namespace ChatServer
             services = service;
             clients = service.GetService<ClientHandler>();
             sender = service.GetService<MessageSender>();
-            logger = service.GetService<Logger>();
+            logger = service.GetService<ILogger>();
         }
 
         protected virtual void OnManualResetEventSet (EventArgs e)

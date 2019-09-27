@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace ChatServer
 {
@@ -10,10 +9,10 @@ namespace ChatServer
             int port = 7777; //Port to open server on
 
             IServiceCollection serviceProvider = new ServiceCollection()
-                .AddSingleton<ClientHandler>()
-                .AddSingleton<RoomHandler>()
-                .AddScoped<Logger>()
-                .AddScoped<MessageSender>(services => new MessageSender(services));
+                .AddScoped<ILogger, ConsoleLogger>()
+                .AddScoped<MessageSender>(services => new MessageSender(services))
+                .AddSingleton<ClientHandler>(services => new ClientHandler(services.GetService<ILogger>()))
+                .AddSingleton<RoomHandler>(services => new RoomHandler(services.GetService<ILogger>()));
 
             Dispatcher dispatcher = new Dispatcher(serviceProvider, port);
             dispatcher.Dispatch();
