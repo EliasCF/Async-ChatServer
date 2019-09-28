@@ -20,7 +20,7 @@ namespace ChatServer
             services = service.BuildServiceProvider();
 
             logger = services.GetService<ILogger>();
-            network = new TcpNetworkManager(port);
+            network = new TcpNetworkManager(services.GetService<ILogger>(), port);
         }
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace ChatServer
         {
             network.ListenForConnections();
 
-            ServerIO io = new ServerIO(services);
-            io.ResetEventIsSet += SetManualResetEvent;
+            ClientAcceptor acceptor = new ClientAcceptor(services);
+            acceptor.ResetEventIsSet += SetManualResetEvent;
 
             while (true) 
             {  
                 allDone.Reset();
-                network.AcceptClients(new AsyncCallback(io.AcceptCallback));
+                network.AcceptClients(acceptor.AcceptCallback);
                 allDone.WaitOne();
             }
         }

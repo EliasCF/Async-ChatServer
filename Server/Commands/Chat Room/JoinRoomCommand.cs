@@ -13,10 +13,13 @@ namespace ChatServer
         
         private RoomHandler chatRooms { get; }
 
+        private MessageSender sender { get; }
+
         public JoinRoomCommand (ServiceProvider services, string param)
         {
             clients = services.GetService<ClientHandler>();
             chatRooms = services.GetService<RoomHandler>();
+            sender = services.GetService<MessageSender>();
 
             parameter = param;
         }
@@ -29,6 +32,9 @@ namespace ChatServer
 
                 Guid roomId = chatRooms.FindByName(roomName);
                 clients.SetRoom(state.client.id, roomId);
+
+                string message = $"{state.client.name} has joined room: {roomName}";
+                sender.SendToAll(null, message, true);
             }
         }
     }

@@ -6,22 +6,22 @@ namespace ChatServer
 {
     public class TcpNetworkManager 
     {
-        private ILogger logger = new ConsoleLogger();
+        private ILogger logger { get; }
 
         private TcpListener listener { get; }
 
-        public TcpNetworkManager (int port) 
+        public TcpNetworkManager (ILogger log, int port) 
         {
+            logger = log;
+            
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             listener = new TcpListener(ipHostInfo.AddressList[0], port);
-
-            logger.Log($"Server started on {listener.LocalEndpoint.ToString()}");
         }
 
         public void ListenForConnections () 
         {
+            logger.Log($"The server is now listening for connections on: {listener.LocalEndpoint.ToString()}");
             listener.Start();
-            logger.Log("The server is now listening for connections");
         }
 
         public void AcceptClients (AsyncCallback callback)
