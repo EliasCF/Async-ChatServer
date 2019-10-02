@@ -15,26 +15,44 @@ namespace ChatServer
             chatRooms = new List<Room>();
             logger = log;
         }
+
+        /// <summary>
+        /// Current amount of chat rooms
+        /// </summary>
+        /// <value></value>
+        public int Count 
+        { 
+            get 
+            { 
+                return chatRooms.Count; 
+            } 
+        }
         
         /// <summary>
         /// Add a room to the list of rooms
         /// </summary>
         /// <param name="name">Name of the new room</param>
         /// <param name="creator">Id of the client who has created the room</param>
-        public void Add (string name, Guid creator)
+        public Guid Add (string name, Guid creator)
         { 
             if (!chatRooms.Any(cr => cr.name == name)) 
             {
                 logger.Log($"Creating new chat room: {name}");
 
+                Guid id = Guid.NewGuid();
+
                 chatRooms.Add(new Room 
                 { 
-                    id = Guid.NewGuid(),
+                    id = id,
                     name = name,
                     createdBy = creator,
                     creationTime = DateTime.Now
                 });
+
+                return id;
             }
+
+            return Guid.Empty;
         }
 
         /// <summary>
