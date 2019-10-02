@@ -1,7 +1,6 @@
-using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Linq;
 using System;
 using Xunit;
 
@@ -9,6 +8,8 @@ namespace ChatServer.Tests
 {
     public class ClientHandlerTest
     {
+        public IServiceProvider services = new ServiceProviderBuilder().Build();
+        
         /// <summary>
         /// Assert that ClientHandler successfully adds a user to its list of Clients when the method, 'Add' is called.
         /// This should not fail unless the methods fails to add the new Client to the list of Clients.
@@ -17,7 +18,7 @@ namespace ChatServer.Tests
         public void Add()
         {
             //Arrange
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
 
             //Act
             clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), "");
@@ -34,7 +35,7 @@ namespace ChatServer.Tests
         public void GetAll ()
         {
             //Arrange
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
 
             for (int i = 0; i < 10; i++) 
             {
@@ -56,7 +57,7 @@ namespace ChatServer.Tests
         public void GetId ()
         {
             //Arrange
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
             Guid id = clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), "");
 
             //Act
@@ -78,7 +79,7 @@ namespace ChatServer.Tests
         {
             //Arrange
             string newClientName = "John Doe";
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
             Guid id = clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), "");
 
             //Act
@@ -98,7 +99,7 @@ namespace ChatServer.Tests
         {
             //Arrange
             ClientState state = ClientState.Passive;
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
             Guid id = clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), "");
 
             //Act
@@ -118,7 +119,7 @@ namespace ChatServer.Tests
         {
             //Arrange
             Guid room = Guid.NewGuid();
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
             Guid id = clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), "");
 
             //Act
@@ -135,7 +136,7 @@ namespace ChatServer.Tests
         public void Close ()
         {
             //Arrange
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
             Guid id = clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), "");
 
             //Act  
@@ -152,7 +153,7 @@ namespace ChatServer.Tests
         public void Exists ()
         {
             //Arrange
-            ClientHandler clients = new ClientHandler(new ConsoleLogger());
+            ClientHandler clients = services.GetService<ClientHandler>();
             Guid id = clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), "");
 
             //Act  
