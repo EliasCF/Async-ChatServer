@@ -36,7 +36,7 @@ namespace ChatServer
         /// <param name="name">Name of the user</param>
         public Guid Add (Socket socket, string name) 
         {
-            logger.Log($"Adding: '{socket.RemoteEndPoint.ToString()}' to client list");
+            logger.Log($"Adding: '{socket.RemoteEndPoint?.ToString()}' to client list");
             
             //Initialize new Client object
             Guid id = Guid.NewGuid();
@@ -63,7 +63,7 @@ namespace ChatServer
         /// <returns>The specified client</returns>
         public Client GetId (Guid id) 
         {
-            return clients.Single(c => c.id.Equals(id));
+            return clients.SingleOrDefault(c => c.id.Equals(id));
         }
 
         /// <summary>
@@ -75,8 +75,10 @@ namespace ChatServer
         {
             int index = clients.FindIndex(c => c.id == id);
 
-            logger.Log($"Setting name of client: '{clients[index].connection.RemoteEndPoint.ToString()}', to: '{name}',");
-            clients[index].name = name;
+            if (index != -1) {
+                logger.Log($"Setting name of client: '{clients[index].connection.RemoteEndPoint?.ToString()}', to: '{name}',");
+                clients[index].name = name;
+            }
         }
 
         /// <summary>
@@ -107,7 +109,6 @@ namespace ChatServer
             {
                 clients[index].roomId = room;
             }
-
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace ChatServer
         {
             int index = clients.FindIndex(c => c.id == id);
 
-            logger.Log($"Closing client: {clients[index].connection.RemoteEndPoint.ToString()}");
+            logger.Log($"Closing client: {clients[index].connection.RemoteEndPoint?.ToString()}");
             clients[index].connection.Close();
             clients.RemoveAt(index);
         }
