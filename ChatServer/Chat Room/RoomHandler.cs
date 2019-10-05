@@ -70,6 +70,15 @@ namespace ChatServer
         }
 
         /// <summary>
+        /// Get a list of all rooms
+        /// </summary>
+        /// <returns>All rooms</returns>
+        public List<Room> GetAll ()
+        {
+            return chatRooms;
+        }
+
+        /// <summary>
         /// Get a rooms id by its name
         /// </summary>
         /// <param name="name">Name of room</param>
