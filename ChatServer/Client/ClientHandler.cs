@@ -133,5 +133,15 @@ namespace ChatServer
         {
             return clients.SingleOrDefault(c => c.id.Equals(id)) == null ? false : true;
         }
+
+        /// <summary>
+        /// Check if a specifc Client exists
+        /// </summary>
+        /// <param name="name">The name of the client</param>
+        /// <returns>Does the client exist</returns>
+        public bool Exists (string name)
+        {
+            return clients.SingleOrDefault(c => c.name.Equals(name)) == null ? false : true;
+        }
     }
 }

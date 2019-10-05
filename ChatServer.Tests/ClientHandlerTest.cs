@@ -150,7 +150,7 @@ namespace ChatServer.Tests
         /// Asserts that the Exists method successfully recognises that existent Client exists and that the nonexistent Client doesn't.
         /// </summary>
         [Fact]
-        public void Exists ()
+        public void Exists_Guid ()
         {
             //Arrange
             ClientHandler clients = services.GetService<ClientHandler>();
@@ -159,6 +159,28 @@ namespace ChatServer.Tests
             //Act  
             bool existentClient = clients.Exists(id);
             bool unexistentClient = clients.Exists(Guid.NewGuid());
+
+            //Assert
+            Assert.True(existentClient);
+            Assert.False(unexistentClient);
+        }
+
+        /// <summary>
+        /// Asserts that the Exists method successfully recognises that existent Client exists and that the nonexistent Client doesn't.
+        /// </summary>
+        [Fact]
+        public void Exists_String ()
+        {
+            //Arrange
+            string existentName = "John Doe";
+            string unexistentName = "Bill Smith";
+            
+            ClientHandler clients = services.GetService<ClientHandler>();
+            Guid id = clients.Add(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp), existentName);
+
+            //Act  
+            bool existentClient = clients.Exists(existentName);
+            bool unexistentClient = clients.Exists(unexistentName);
 
             //Assert
             Assert.True(existentClient);
