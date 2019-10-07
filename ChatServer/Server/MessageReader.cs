@@ -47,25 +47,25 @@ namespace ChatServer
 
                     string message = content.Substring(0, content.Length - 6);
 
-                    if (message[0] == '/') 
+                    if (message[0] == '/')
                     {
                         //If the message was a command then run it
                         CommandFactory factory = new CommandFactory();
-                        ICommand command = factory.Build(services, message);
-                        command.handle(state);
+
+                        if (state.client.AcceptsCommand(message))
+                        {
+                            ICommand command = factory.Build(services, message);
+                            command.handle(state);
+                        }
                     }
 
                     //Exit method if the last command was a DiconnectCommand
                     if (!clients.Exists(state.client.id)) return;
 
-                    //Disconnect client if their first message wasn't a name command
-                    if (clients.GetId(state.client.id).state == ClientState.NeedName) 
+                    if (clients.GetId(state.client.id).state != ClientState.NeedName) 
                     {
-                        clients.Close(state.client.id);
-                        return;
+                        sender.SendToAll(state.client, message, true); //Send message to all clients but the sender
                     }
-
-                    sender.SendToAll(state.client, message, true); //Send message to all clients but the sender
 
                     state.sb.Clear(); //Clear StringBuilder of messages
                 }

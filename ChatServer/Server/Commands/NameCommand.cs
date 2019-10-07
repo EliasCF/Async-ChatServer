@@ -12,6 +12,8 @@ namespace ChatServer
 
         private MessageSender sender { get; }
 
+        public NameCommand () { }
+
         public NameCommand (ServiceProvider serivces, string param) 
         {
             clients = serivces.GetService<ClientHandler>();

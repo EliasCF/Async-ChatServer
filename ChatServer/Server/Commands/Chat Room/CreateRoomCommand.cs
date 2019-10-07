@@ -12,6 +12,8 @@ namespace ChatServer
 
         private RoomHandler chatRooms { get; }
 
+        public CreateRoomCommand () { }
+
         public CreateRoomCommand (ServiceProvider services, string param)
         {
             clients = services.GetService<ClientHandler>();

@@ -10,6 +10,8 @@ namespace ChatServer
 
         private ClientHandler clients { get; }
 
+        public ClientCountCommand () { }
+
         public ClientCountCommand (ServiceProvider service) 
         {
             sender = service.GetService<MessageSender>();

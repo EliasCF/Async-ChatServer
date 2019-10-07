@@ -15,6 +15,8 @@ namespace ChatServer
 
         private MessageSender sender { get; }
 
+        public JoinRoomCommand () { }
+
         public JoinRoomCommand (ServiceProvider services, string param)
         {
             clients = services.GetService<ClientHandler>();

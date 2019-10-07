@@ -12,6 +12,8 @@ namespace ChatServer
 
         private MessageSender sender { get; }
 
+        public RoomOverviewCommand () { }
+
         public RoomOverviewCommand (ServiceProvider services)
         {
             rooms = services.GetService<RoomHandler>();

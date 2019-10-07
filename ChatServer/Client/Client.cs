@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using System.Linq;
 using System;
 
 namespace ChatServer
@@ -39,5 +40,24 @@ namespace ChatServer
         /// The Guid will be Guid.Empty if the client has not joined any room.
         /// </summary>
         public Guid roomId { get; set; }
+
+        /// <summary>
+        /// Indicate whether the client's current state allows running a specific command
+        /// </summary>
+        /// <param name="command">The command in question</param>
+        /// <returns>Whether command is compatible with client state</returns>
+        public bool AcceptsCommand (string command)
+        {
+            var incompatibilities = new IncompatibilityList().Incompatabilies;
+
+            command = command.Split(' ')[0];
+
+            if (incompatibilities.Where(c => c.Key == state && c.Value.Contains(command)).Count() > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
