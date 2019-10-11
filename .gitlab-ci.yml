@@ -1,0 +1,22 @@
+image: microsoft/dotnet:latest
+
+variables:
+  test: 'PrimService.Tests'
+
+stages:
+  - build
+  - test
+
+before_script:
+  - 'dotnet restore'
+
+build:
+  stage: build
+  script:
+    - 'dotnet build --no-restore'
+
+tests:
+  stage: test
+  script:
+    - 'cd ChatServer.Tests'
+    - 'dotnet test --no-restore'
